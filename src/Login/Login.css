@@ -1,0 +1,15 @@
+.page {
+    height: 100%;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    background-color: #FAFAFA
+}
+
+.container {
+    height: 300px; 
+    display: flex; 
+    flex-direction: column;
+    padding: 32px;
+    justify-content: space-evenly;
+}
