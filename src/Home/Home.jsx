@@ -1,5 +1,6 @@
 import { Button } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import './Home.css';
 import { getLoggedUser, getUsuarios, logout } from '../service';
 import { DataGrid } from '@mui/x-data-grid';
@@ -8,6 +9,8 @@ import moment from 'moment';
 export default function Home() {
     const [loading, setLoading] = useState(false);
     const [usuarios, setUsuarios] = useState([]);
+
+    const navigate = useNavigate();
 
     const columns = [
         { field: 'id', headerName: 'ID', type: 'number'  },
@@ -29,7 +32,7 @@ export default function Home() {
     const logoutHandler = () => {
         setLoading(true);
         logout().then(() => {
-
+            navigate('/login');
         }).catch(() => {
 
         }).finally(() => {
@@ -50,7 +53,7 @@ export default function Home() {
     }
     
     return (
-        <div className='page'>
+        <div className='page-home'>
             <div style={{ display: 'flex',padding: 16 }}>
                 <p style={{ marginRight: 8 }}>Bem Vindo {getLoggedUser()}</p>
                 <Button

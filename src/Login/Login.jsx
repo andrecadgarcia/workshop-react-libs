@@ -1,7 +1,8 @@
 import { Button, TextField, Card } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import './Login.css';
-import { login, sigin, update } from '../service';
+import { login, sigin, update, getLoggedUser } from '../service';
 
 export default function Login() {
 
@@ -11,14 +12,19 @@ export default function Login() {
     const [sigingIn, setSigningIn] = useState(false);
     const [resettingPassword, setResettingPassword] = useState(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
+        if (getLoggedUser()) {
+            navigate('/home');
+        }
         return () => { }
     }, []);
 
     const loginHandler = () => {
         setLoading(true);
         login(usuario, senha).then(result => {
-            alert(result);
+            navigate('/home');
         }).catch(result => {
             alert(result);
         }).finally(() => {
@@ -68,7 +74,7 @@ export default function Login() {
     const isFormValid = (usuario && senha && !loading) || false;
 
     return (
-        <div className='page'>
+        <div className='page-login'>
             <Card className='container'>
                   
                 <TextField 
