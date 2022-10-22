@@ -4,14 +4,19 @@ import Login from './Login/Login';
 import Home from './Home/Home';
 import { getLoggedUser } from './service';
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { connect } from 'react-redux';
 
-const ProtectedRoute = ({ children }) => {
-  if (!getLoggedUser()) {
+const mapStateToProps = store => ({
+  usuarios: store.usuarioState
+});
+
+const ProtectedRoute = connect(mapStateToProps)(({ children, usuarios }) => {
+  if (!(usuarios || []).find(item => item.loggedIn)) {
     return <Navigate to="/login" replace />;
   }
 
   return children;
-};
+});
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -44,8 +49,6 @@ function App() {
 
   return (
     <>
-      {/* {loggedIn && <Home />}
-      {!loggedIn && <Login />} */}
       <RouterProvider router={router} />
     </>
   );

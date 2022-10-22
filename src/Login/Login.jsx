@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import './Login.css';
 import { login, sigin, update, getLoggedUser } from '../service';
+import { connect } from 'react-redux';
+import { createUsuario, updateUsuario, loginUsuario } from '../usuarioStore/actions';
 
-export default function Login() {
+function Login({ dispatch }) {
 
     const [usuario, setUsuario] = useState('');
     const [senha, setSenha] = useState('');
@@ -23,13 +25,12 @@ export default function Login() {
 
     const loginHandler = () => {
         setLoading(true);
-        login(usuario, senha).then(result => {
+        dispatch(loginUsuario({ usuario, senha }));
+        setTimeout(() => {
+            setLoading(false);
             navigate('/home');
-        }).catch(result => {
-            alert(result);
-        }).finally(() => {
-            restoreLoginForm();
-        });
+        }, 1000);
+        
     }
 
     const resetPasswordHandler = () => {
@@ -38,13 +39,10 @@ export default function Login() {
         }
         else {
             setLoading(true);
-            update(usuario, senha).then(result => {
-                alert(result);
-            }).catch(result => {
-                alert(result);
-            }).finally(() => {
-                restoreLoginForm();
-            });
+            dispatch(updateUsuario({ usuario, senha }));
+            setTimeout(() => {
+                restoreLoginForm(false);
+            }, 1000);
         }
     }
 
@@ -54,13 +52,10 @@ export default function Login() {
         }
         else {
             setLoading(true);
-            sigin(usuario, senha).then(result => {
-                alert(result);
-            }).catch(result => {
-                alert(result);
-            }).finally(() => {
-                restoreLoginForm();
-            });
+            dispatch(createUsuario({ usuario, senha }));
+            setTimeout(() => {
+                restoreLoginForm(false);
+            }, 1000);
         }
     }
 
@@ -139,3 +134,5 @@ export default function Login() {
         </div>
     )
 }
+
+export default connect()(Login);

@@ -5,16 +5,18 @@ import './Home.css';
 import { getLoggedUser, getUsuarios, logout } from '../service';
 import { DataGrid } from '@mui/x-data-grid';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
-export default function Home() {
+function Home({ usuarios }) {
     const [loading, setLoading] = useState(false);
-    const [usuarios, setUsuarios] = useState([]);
 
+    console.log(usuarios);
     const navigate = useNavigate();
 
     const columns = [
         { field: 'id', headerName: 'ID', type: 'number'  },
         { field: 'usuario', headerName: 'Usuário', type: 'string', width: 160  },
+        { field: 'senha', headerName: 'Senha', type: 'string', width: 160  },
         { field: 'logged_at', headerName: 'Último Login', type: 'string', width: 160, valueGetter: params => localeDate(params.logged_at) },
         { field: 'created_at', headerName: 'Criado Em', type: 'string', width: 160, valueGetter: params => localeDate(params.logged_at) },
         { field: 'updated_at', headerName: 'Atualizado Em', type: 'string', width: 160, valueGetter: params => localeDate(params.logged_at) }
@@ -25,7 +27,6 @@ export default function Home() {
     }
 
     useEffect(() => {
-        loadUsuarios();
         return () => { }
     }, []);
 
@@ -35,18 +36,6 @@ export default function Home() {
             navigate('/login');
         }).catch(() => {
 
-        }).finally(() => {
-            setLoading(false);
-        });
-    }
-
-    const loadUsuarios = () => {
-        setLoading(true);
-        
-        getUsuarios().then((usuarios) => {
-            setUsuarios(usuarios);
-        }).catch((result) => {
-            alert(result);
         }).finally(() => {
             setLoading(false);
         });
@@ -66,7 +55,7 @@ export default function Home() {
             </div>
             <div style={{ width: '100%', flex: 1 }}>
                 <DataGrid
-                    rows={usuarios}
+                    rows={usuarios || []}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -76,3 +65,9 @@ export default function Home() {
         </div>
     );
 }
+
+const mapStateToProps = store => ({
+    usuarios: store.usuarioState
+});
+
+export default connect(mapStateToProps)(Home);
